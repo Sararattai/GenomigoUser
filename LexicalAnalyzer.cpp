@@ -2,6 +2,7 @@
 #include<stdlib.h> 
 #include<stdbool.h>
 #include<string.h>
+#include<ctype.h>
 
 int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken);
 
@@ -20,6 +21,7 @@ int parseTokens(const char * filePath)
 	char * tokens[10];
 	char * linePtr;
 	char line[400];
+
 	char delimiter = ',';
 
 	FILE * userFile;
@@ -70,7 +72,12 @@ int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken)
 		}
 		else if ( isdigit(*linePtr) )
 		{
-
+			numPtr = findEndOfNum(linePtr);
+			token = extractNum(startPtr, numPtr);
+			tokens[tokenIndex] = token;
+			tokenIndex++;
+			break;
+			
 		}
 		else if ( *linePtr == delimiter )
 		{
