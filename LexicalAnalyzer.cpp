@@ -20,9 +20,7 @@ int parseTokens(const char * filePath)
 	char * tokens[10];
 	char * linePtr;
 	char line[400];
-	char delimiter;
-
-	delimiter = ',';
+	char delimiter = ',';
 
 	FILE * userFile;
 
@@ -43,13 +41,69 @@ int parseTokens(const char * filePath)
 			break;
 		}
 
-		int result = parseLine(linePtr, ',', tokens, maxToken);
+		int result = parseLine(linePtr, delimiter, tokens, maxToken);
 		printf("%d" "tokens were found",result);
 
 		fclose (userFile);
 		return result;
 	}
+}
 
+int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken)
+{
+	char *startPtr ;
+	char *endPtr ;
+	char *token ;
+	int   tokenIndex = 0 ;
+
+	while ( *linePtr )
+	{
+		startPtr = linePtr ;
+
+		if ( isalpha(*linePtr) )
+		{
+			endPtr = findEndOfIdentifier(linePtr) ;
+			token = extractIdentifier(startPtr, endPtr) ;
+			tokens[tokenIndex] = token ;
+			tokenIndex++ ;
+			break ;
+		}
+		else if ( isdigit(*linePtr) )
+		{
+
+		}
+		else if ( *linePtr == delimiter )
+		{
+			linePtr++ ;
+			break ;
+		}
+
+	}
+
+	return linePtr ;
+}
+
+char * findEndOfIdentifier(char * linePtr)
+{
+	while ( (*linePtr != '\0') && isalpha(*linePtr) )
+	{
+		linePtr++;
+	}
+
+	return linePtr ;
+}
+
+char * extractIdentifier(startPtr, endPtr)
+{
+	int length = endPtr - startPtr;
+	char* token = (char*)malloc(length + 1);
+	strncpy(token, startPtr, length)
+	token[length] = '\0';
+
+	return token;
+}
+
+	/*
 	int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken)
 	{
 		char* srcStr = (char*)malloc(strlen(linePtr) + 1);
@@ -68,3 +122,4 @@ int parseTokens(const char * filePath)
 			strlen++;
 		}
 	}
+	*/
