@@ -53,15 +53,18 @@ int parseTokens(const char * filePath)
 
 int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken)
 {
-	char *startPtr ;
+	char *startPtr;
 	char *endPtr ;
 	char *token ;
+	char *numPtr;
+	char * countNum;
+	int count = 0;
 	int   tokenIndex = 0 ;
 
 	while ( *linePtr )
 	{
 		startPtr = linePtr ;
-
+	
 		if ( isalpha(*linePtr) )
 		{
 			endPtr = findEndOfIdentifier(linePtr) ;
@@ -73,9 +76,9 @@ int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken)
 		else if ( isdigit(*linePtr) )
 		{
 			numPtr = findEndOfNum(linePtr);
-			token = extractNum(startPtr, numPtr);
-			tokens[tokenIndex] = token;
-			tokenIndex++;
+			countNum = extractNum(startPtr, numPtr);
+			tokens[count] = countNum;
+			count++;
 			break;
 			
 		}
@@ -87,7 +90,7 @@ int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken)
 
 	}
 
-	return linePtr ;
+	return ;
 }
 
 char * findEndOfIdentifier(char * linePtr)
@@ -104,12 +107,31 @@ char * extractIdentifier(startPtr, endPtr)
 {
 	int length = endPtr - startPtr;
 	char* token = (char*)malloc(length + 1);
-	strncpy(token, startPtr, length)
+	strncpy(token, startPtr, length);
 	token[length] = '\0';
 
 	return token;
 }
 
+char * findEndOfNum(char * linePtr)
+{
+	while ((*linePtr != '\0') && isdigit(*linePtr))
+	{
+		linePtr++;
+	}
+
+	return linePtr;
+}
+
+char * extractNum(startPtr, numPtr)
+{
+	int length = numPtr - startPtr;
+	char* countNum = (char*)malloc(length + 1);
+	strncpy(countNum, startPtr, length);
+	countNum[length] = '\0';
+
+	return countNum;
+}
 	/*
 	int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken)
 	{
