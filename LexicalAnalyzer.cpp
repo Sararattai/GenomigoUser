@@ -5,6 +5,11 @@
 #include<ctype.h>
 
 int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken);
+char * extractIdentifier(char *startPtr, char *endPtr);
+char * findEndOfIdentifier(char * linePtr);
+char * extractNum(char * startPtr, char *  numPtr);
+char * findEndOfNum(char * linePtr);
+char * extractNum(char * startPtr, char *  numPtr);
 
 struct User
 {
@@ -103,7 +108,7 @@ char * findEndOfIdentifier(char * linePtr)
 	return linePtr ;
 }
 
-char * extractIdentifier(startPtr, endPtr)
+char * extractIdentifier(char *startPtr, char *endPtr)
 {
 	int length = endPtr - startPtr;
 	char* token = (char*)malloc(length + 1);
@@ -123,7 +128,7 @@ char * findEndOfNum(char * linePtr)
 	return linePtr;
 }
 
-char * extractNum(startPtr, numPtr)
+char * extractNum(char * startPtr, char *  numPtr)
 {
 	int length = numPtr - startPtr;
 	char* countNum = (char*)malloc(length + 1);
