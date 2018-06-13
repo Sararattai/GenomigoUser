@@ -10,6 +10,7 @@ char * findEndOfIdentifier(char * linePtr);
 char * extractNum(char * startPtr, char *  numPtr);
 char * findEndOfNum(char * linePtr);
 char * extractNum(char * startPtr, char *  numPtr);
+int  atoi(char * token);
 
 struct User
 {
@@ -26,6 +27,7 @@ int parseTokens(const char * filePath)
 	char * tokens[10];
 	char * linePtr;
 	char line[400];
+	char * token;
 
 	char delimiter = ',';
 
@@ -49,7 +51,8 @@ int parseTokens(const char * filePath)
 		}
 
 		int result = parseLine(linePtr, delimiter, tokens, maxToken);
-		printf("%d" "tokens were found",result);
+		int digit = atoi(token);
+		printf("%d" "tokens were found",digit);
 
 		fclose (userFile);
 		return result;
@@ -63,8 +66,8 @@ int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken)
 	char *token ;
 	char *numPtr;
 	char * countNum;
-	int count = 0;
 	int   tokenIndex = 0 ;
+	int digit=0;
 
 	while ( *linePtr )
 	{
@@ -82,8 +85,8 @@ int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken)
 		{
 			numPtr = findEndOfNum(linePtr);
 			countNum = extractNum(startPtr, numPtr);
-			tokens[count] = countNum;
-			count++;
+			tokens[tokenIndex] = countNum;
+			tokenIndex++;
 			break;
 			
 		}
@@ -95,7 +98,7 @@ int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken)
 
 	}
 
-	return ;
+	return tokenIndex ;
 }
 
 char * findEndOfIdentifier(char * linePtr)
@@ -131,11 +134,17 @@ char * findEndOfNum(char * linePtr)
 char * extractNum(char * startPtr, char *  numPtr)
 {
 	int length = numPtr - startPtr;
-	char* countNum = (char*)malloc(length + 1);
-	strncpy(countNum, startPtr, length);
-	countNum[length] = '\0';
+	char* token = (char*)malloc(length + 1);
+	strncpy(token, startPtr, length);
+	token[length] = '\0';
 
-	return countNum;
+	return token;
+}
+int atoi(char * token)
+{
+	int digit = atoi(token);
+
+	return digit;
 }
 	/*
 	int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken)
