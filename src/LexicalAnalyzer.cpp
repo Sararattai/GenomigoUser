@@ -64,8 +64,8 @@ int parseTokens(const char * filePath)
 			break;
 		}
 
-		int result = parseLine(&user, linePtr, delimiter);
-		printf("%d" "tokens were found", result);
+		user = parseLine(linePtr, delimiter);
+		//printf("%d" "tokens were found", result);
 
 		fclose (userFile);
 		return result;
@@ -73,22 +73,23 @@ int parseTokens(const char * filePath)
 }
 
 
-int parseLine(User * user, char * linePtr, char delimiter)
+User parseLine(char * linePtr, char delimiter)
 {
+	User 			user ;
 	TextLineParser	textLineParser ;
 
 	textLineParser.currentLinePtr = linePtr ;
 	
 	getNextToken(&textLineParser, delimiter) ;
-	user->userId = atoi(textLineParser.currentToken) ;
+	user.userId = atoi(textLineParser.currentToken) ;
 	skipDelimiter(&textLineParser, delimiter) ;
 
 	getNextToken(&textLineParser, delimiter) ;
-	user->firstName = textLineParser.currentToken ;
+	user.firstName = textLineParser.currentToken ;
 	skipDelimiter(&textLineParser, delimiter) ;
 
-	printf("%d %s %s", user->userId, user->firstName, user->lastName);
-	return ;
+	printf("%d %s %s", user.userId, user.firstName, user.lastName);
+	return user ;
 }
 
 void getNextToken(TextLineParser * textLineParserPtr,char delimiter)
