@@ -36,12 +36,11 @@ struct User
 
 int parseTokens(const char * filePath)
 {
-	struct User;
 	int maxToken = 10;
 	char * tokens[10];
 	char * linePtr;
 	char line[400];
-	User 			user ;
+	struct User user ;
 
 
 	char delimiter = ',';
@@ -88,14 +87,15 @@ int parseLine(User * user, char * linePtr, char delimiter)
 	user->firstName = textLineParser.currentToken ;
 	skipDelimiter(&textLineParser, delimiter) ;
 
-	printf("%d %s %s", user->userId, user->firstName, user->lastName)
+	printf("%d %s %s", user->userId, user->firstName, user->lastName);
 	return ;
 }
 
-void getNextToken(TextLineParser * textLineParserPtr)
+void getNextToken(TextLineParser * textLineParserPtr,char delimiter)
 {
 	char *startPtr = textLineParserPtr->currentLinePtr ;
 	char *endPtr ;
+	
 
 	while ( (*textLineParserPtr->currentLinePtr != '\0') && (*textLineParserPtr->currentLinePtr != delimiter) )
 	{
