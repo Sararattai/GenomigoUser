@@ -10,6 +10,7 @@ char * findEndOfIdentifier(char * linePtr);
 char * extractNum(char * startPtr, char *  numPtr);
 char * findEndOfNum(char * linePtr);
 char * extractNum(char * startPtr, char *  numPtr);
+int  atoi(char * token);
 
 struct User
 {
