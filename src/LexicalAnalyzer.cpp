@@ -10,14 +10,28 @@ char * findEndOfIdentifier(char * linePtr);
 char * extractNum(char * startPtr, char *  numPtr);
 char * findEndOfNum(char * linePtr);
 char * extractNum(char * startPtr, char *  numPtr);
-int  atoi(char * token);
+
+#define	VALID	 0
+#define	INVALID	 -1
+
+
+struct TextLineParser
+{
+	char * 	currentLinePtr ;
+	char * 	currentToken ;
+};
 
 struct User
 {
-	char * firstName;
-	char * lastName;
-	int * DOB;
-	char * userId;
+	int  	userId;
+	char * 	firstName;
+	char * 	lastName;
+	char * 	address;
+	char * 	city;
+	int  	zip;
+
+	char  	phone[10];
+	int  	DOB;
 };
 
 int parseTokens(const char * filePath)
@@ -27,6 +41,7 @@ int parseTokens(const char * filePath)
 	char * tokens[10];
 	char * linePtr;
 	char line[400];
+	User 			user ;
 
 
 	char delimiter = ',';
@@ -50,7 +65,7 @@ int parseTokens(const char * filePath)
 			break;
 		}
 
-		int result = parseLine(linePtr, delimiter, tokens, maxToken);
+		int result = parseLine(&user, linePtr, delimiter);
 		printf("%d" "tokens were found", result);
 
 		fclose (userFile);
@@ -58,47 +73,61 @@ int parseTokens(const char * filePath)
 	}
 }
 
-int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken)
+
+int parseLine(User * user, char * linePtr, char delimiter)
 {
-	char *startPtr;
-	char *endPtr ;
-	char *numPtr;
-	char * token;
-	int   tokenIndex = 0 ;
+	TextLineParser	textLineParser ;
 
-
-	while ( *linePtr )
-	{
-		startPtr = linePtr ;
+	textLineParser.currentLinePtr = linePtr ;
 	
-		if ( isalpha(*linePtr) )
-		{
-			endPtr = findEndOfIdentifier(linePtr) ;
-			token = extractIdentifier(startPtr, endPtr) ;
-			tokens[tokenIndex] = token;
-			int digit = atoi(token);
-			tokenIndex++ ;
-			break ;
-		}
-		else if ( isdigit(*linePtr) )
-		{
-			numPtr = findEndOfNum(linePtr);
-			token = extractNum(startPtr, numPtr);
-			tokens[tokenIndex] = token;
-			int digit = atoi(token);
-			tokenIndex++;
-			break;
-			
-		}
-		else if ( *linePtr == delimiter )
-		{
-			linePtr++ ;
-			break ;
-		}
+	getNextToken(&textLineParser, delimiter) ;
+	user->userId = atoi(textLineParser.currentToken) ;
+	skipDelimiter(&textLineParser, delimiter) ;
 
+	getNextToken(&textLineParser, delimiter) ;
+	user->firstName = textLineParser.currentToken ;
+	skipDelimiter(&textLineParser, delimiter) ;
+
+	printf("%d %s %s", user->userId, user->firstName, user->lastName)
+	return ;
+}
+
+void getNextToken(TextLineParser * textLineParserPtr)
+{
+	char *startPtr = textLineParserPtr->currentLinePtr ;
+	char *endPtr ;
+
+	while ( (*textLineParserPtr->currentLinePtr != '\0') && (*textLineParserPtr->currentLinePtr != delimiter) )
+	{
+		textLineParserPtr->currentLinePtr++ ;
 	}
 
-	return tokenIndex ;
+	endPtr = textLineParserPtr->currentLinePtr ;
+
+	char* token = extractToken(startPtr, endPtr) ;
+	textLineParserPtr->currentToken = token ;
+	return ;
+}
+
+char * extractToken(char *startPtr, char *endPtr)
+{
+	int length = endPtr - startPtr;
+	char* token = (char*)malloc(length + 1);
+	strncpy(token, startPtr, length);
+	token[length] = '\0';
+
+	return token;
+}
+
+
+void skipDelimiter(TextLineParser * textLineParserPtr, char delimiter)
+{
+	if ( *textLineParserPtr->currentLinePtr == delimiter )
+	{
+		textLineParserPtr->currentLinePtr++ ;
+	}
+
+	return ;
 }
 
 char * findEndOfIdentifier(char * linePtr)
@@ -111,15 +140,6 @@ char * findEndOfIdentifier(char * linePtr)
 	return linePtr ;
 }
 
-char * extractIdentifier(char *startPtr, char *endPtr)
-{
-	int length = endPtr - startPtr;
-	char* token = (char*)malloc(length + 1);
-	strncpy(token, startPtr, length);
-	token[length] = '\0';
-
-	return token;
-}
 
 char * findEndOfNum(char * linePtr)
 {
@@ -140,6 +160,52 @@ char * extractNum(char * startPtr, char *  numPtr)
 
 	return token;
 }
+
+
+/*
+int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken)
+{
+char *startPtr;
+char *endPtr ;
+char *numPtr;
+char * token;
+int   tokenIndex = 0 ;
+
+
+while ( *linePtr )
+{
+	startPtr = linePtr ;
+
+	if ( isalpha(*linePtr) )
+	{
+		endPtr = findEndOfIdentifier(linePtr) ;
+		token = extractIdentifier(startPtr, endPtr) ;
+		tokens[tokenIndex] = token;
+		int digit = atoi(token);
+		tokenIndex++ ;
+		break ;
+	}
+	else if ( isdigit(*linePtr) )
+	{
+		numPtr = findEndOfNum(linePtr);
+		token = extractNum(startPtr, numPtr);
+		tokens[tokenIndex] = token;
+		int digit = atoi(token);
+		tokenIndex++;
+		break;
+
+	}
+	else if ( *linePtr == delimiter )
+	{
+		linePtr++ ;
+		break ;
+	}
+
+}
+
+return tokenIndex ;
+}
+*/
 
 	/*
 	int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken)
