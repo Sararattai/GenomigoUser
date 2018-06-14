@@ -3,13 +3,17 @@
 #include<stdbool.h>
 #include<string.h>
 #include<ctype.h>
+#include<time.h>
 
-int parseLine(char * linePtr, char delimiter, char * tokens[], int maxToken);
-char * extractIdentifier(char *startPtr, char *endPtr);
+struct User parseLine(char * linePtr, char delimiter);
+char * extractToken(char *startPtr, char *endPtr);
 char * findEndOfIdentifier(char * linePtr);
 char * extractNum(char * startPtr, char *  numPtr);
 char * findEndOfNum(char * linePtr);
 char * extractNum(char * startPtr, char *  numPtr);
+void skipDelimiter(struct TextLineParser * textLineParserPtr, char delimiter);
+void getNextToken(struct TextLineParser * textLineParserPtr, char delimiter);
+void skipDt(struct TextLinePrser *textLineParser, char space);
 
 #define	VALID	 0
 #define	INVALID	 -1
@@ -30,7 +34,7 @@ struct User
 	char * 	city;
 	int  	zip;
 
-	char  	phone[10];
+	char  *	phone;
 	int  	DOB;
 };
 
@@ -45,6 +49,8 @@ int parseTokens(const char * filePath)
 
 	char delimiter = ',';
 
+	char space = '-';
+
 	FILE * userFile;
 
 	userFile = fopen(filePath,"r");
@@ -54,6 +60,8 @@ int parseTokens(const char * filePath)
 		printf("Unable to open the file !!!");
 		return 2;
 	}
+
+	linePtr = fgets(line, sizeof(line), userFile);
 
 	while (true)
 	{
@@ -67,16 +75,16 @@ int parseTokens(const char * filePath)
 		user = parseLine(linePtr, delimiter);
 		//printf("%d" "tokens were found", result);
 
-		fclose (userFile);
-		return result;
 	}
+	fclose(userFile);
+	return 0;
 }
 
 
-User parseLine(char * linePtr, char delimiter)
+struct User parseLine(char * linePtr, char delimiter)
 {
-	User 			user ;
-	TextLineParser	textLineParser ;
+	struct User	    user ;
+	struct TextLineParser	textLineParser ;
 
 	textLineParser.currentLinePtr = linePtr ;
 	
@@ -88,11 +96,38 @@ User parseLine(char * linePtr, char delimiter)
 	user.firstName = textLineParser.currentToken ;
 	skipDelimiter(&textLineParser, delimiter) ;
 
-	printf("%d %s %s", user.userId, user.firstName, user.lastName);
+	getNextToken(&textLineParser, delimiter);
+	user.lastName = textLineParser.currentToken;
+	skipDelimiter(&textLineParser, delimiter);
+
+	getNextToken(&textLineParser, delimiter);
+	user.address = textLineParser.currentToken;
+	skipDelimiter(&textLineParser, delimiter);
+
+	getNextToken(&textLineParser, delimiter);
+	user.city = textLineParser.currentToken;
+	skipDelimiter(&textLineParser, delimiter);
+
+	getNextToken(&textLineParser, delimiter);
+	user.zip = atoi(textLineParser.currentToken);
+	skipDelimiter(&textLineParser, delimiter);
+
+	getNextToken(&textLineParser, delimiter);
+	user.phone = textLineParser.currentToken;
+	skipDelimiter(&textLineParser, delimiter);
+
+	getNextToken(&textLineParser, delimiter);
+	user.phone = textLineParser.currentToken;
+	skipDt(&textLineParser, space);
+
+	printf("%d %s %s %s %s %s %d % d", user.userId, user.firstName, user.lastName, user.address, user.city,user.phone);
+
+	printf("%y %m %d", user.DOB);
+
 	return user ;
 }
 
-void getNextToken(TextLineParser * textLineParserPtr,char delimiter)
+void getNextToken(struct TextLineParser * textLineParserPtr,char delimiter)
 {
 	char *startPtr = textLineParserPtr->currentLinePtr ;
 	char *endPtr ;
@@ -121,11 +156,21 @@ char * extractToken(char *startPtr, char *endPtr)
 }
 
 
-void skipDelimiter(TextLineParser * textLineParserPtr, char delimiter)
+void skipDelimiter(struct TextLineParser * textLineParserPtr, char delimiter)
 {
 	if ( *textLineParserPtr->currentLinePtr == delimiter )
 	{
 		textLineParserPtr->currentLinePtr++ ;
+	}
+
+	return ;
+}
+
+void skipDt(struct TextLineParser * textLineParserPtr, char space)
+{
+	if (*textLineParserPtr->currentLinePtr == space)
+	{
+		textLineParserPtr->currentLinePtr++;
 	}
 
 	return ;
@@ -161,6 +206,7 @@ char * extractNum(char * startPtr, char *  numPtr)
 
 	return token;
 }
+
 
 
 /*

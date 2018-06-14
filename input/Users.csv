@@ -1,4 +1,4 @@
-User Id,First Name,Last Name,Address,City,Zip Code,Phone number,
-1000,John,Li,Jacaranda Dr,Fremont,94539,510 453 3434,1998/2/23
-1001,Joe,Fanta,Robo St,San Jose,95342,408 394 4393,2000/6/13
-1002,Lisa,Ray,Spencer Dr,Stockton,84753,384 392 4958,1995/3/19
+User Id,First Name,Last Name,Address,City,Zip Code,Phone number,DOB
+1000,John,Li,Jacaranda Dr,Fremont,94539,510 453 3434,23-02-98
+1001,Joe,Fanta,Robo St,San Jose,95342,408 394 4393,13-06-00
+1002,Lisa,Ray,Spencer Dr,Stockton,84753,384 392 4958,19-03-95
