@@ -3,7 +3,7 @@
 #include<stdbool.h>
 #include<string.h>
 #include<ctype.h>
-#include<time.h>
+
 
 struct User parseLine(char * linePtr, char delimiter);
 char * extractToken(char *startPtr, char *endPtr);
@@ -13,7 +13,6 @@ char * findEndOfNum(char * linePtr);
 char * extractNum(char * startPtr, char *  numPtr);
 void skipDelimiter(struct TextLineParser * textLineParserPtr, char delimiter);
 void getNextToken(struct TextLineParser * textLineParserPtr, char delimiter);
-void skipDt(struct TextLinePrser *textLineParser, char space);
 
 #define	VALID	 0
 #define	INVALID	 -1
@@ -48,8 +47,6 @@ int parseTokens(const char * filePath)
 
 
 	char delimiter = ',';
-
-	char space = '-';
 
 	FILE * userFile;
 
@@ -116,13 +113,8 @@ struct User parseLine(char * linePtr, char delimiter)
 	user.phone = textLineParser.currentToken;
 	skipDelimiter(&textLineParser, delimiter);
 
-	getNextToken(&textLineParser, delimiter);
-	user.phone = textLineParser.currentToken;
-	skipDt(&textLineParser, space);
 
 	printf("%d %s %s %s %s %s %d % d", user.userId, user.firstName, user.lastName, user.address, user.city,user.phone);
-
-	printf("%y %m %d", user.DOB);
 
 	return user ;
 }
@@ -166,15 +158,6 @@ void skipDelimiter(struct TextLineParser * textLineParserPtr, char delimiter)
 	return ;
 }
 
-void skipDt(struct TextLineParser * textLineParserPtr, char space)
-{
-	if (*textLineParserPtr->currentLinePtr == space)
-	{
-		textLineParserPtr->currentLinePtr++;
-	}
-
-	return ;
-}
 
 char * findEndOfIdentifier(char * linePtr)
 {
